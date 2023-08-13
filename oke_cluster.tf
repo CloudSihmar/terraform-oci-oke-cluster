@@ -1,13 +1,13 @@
 
-resource "oci_containerengine_cluster" "FoggyKitchenOKECluster" {
+resource "oci_containerengine_cluster" "kubeOKECluster" {
   #depends_on = [oci_identity_policy.FoggyKitchenOKEPolicy1]
-  compartment_id     = oci_identity_compartment.FoggyKitchenCompartment.id
+  compartment_id     = oci_identity_compartment.kubeCompartment.id
   kubernetes_version = var.kubernetes_version
   name               = var.ClusterName
-  vcn_id             = oci_core_vcn.FoggyKitchenVCN.id
+  vcn_id             = oci_core_vcn.kubeVCN.id
 
   options {
-    service_lb_subnet_ids = [oci_core_subnet.FoggyKitchenClusterSubnet.id]
+    service_lb_subnet_ids = [oci_core_subnet.kubeClusterSubnet.id]
 
     add_ons {
       is_kubernetes_dashboard_enabled = true
@@ -22,16 +22,16 @@ resource "oci_containerengine_cluster" "FoggyKitchenOKECluster" {
 }
 
 locals {
-  all_sources = data.oci_containerengine_node_pool_option.FoggyKitchenOKEClusterNodePoolOption.sources
+  all_sources = data.oci_containerengine_node_pool_option.kubeClusterNodePoolOption.sources
   oracle_linux_images = [for source in local.all_sources : source.image_id if length(regexall("Oracle-Linux-[0-9]*.[0-9]*-20[0-9]*",source.source_name)) > 0]
 }
 
-resource "oci_containerengine_node_pool" "FoggyKitchenOKENodePool" {
-  #depends_on = [oci_identity_policy.FoggyKitchenOKEPolicy1]
-  cluster_id         = oci_containerengine_cluster.FoggyKitchenOKECluster.id
-  compartment_id     = oci_identity_compartment.FoggyKitchenCompartment.id
+resource "oci_containerengine_node_pool" "kubeOKENodePool" {
+  #depends_on = [oci_identity_policy.kubeOKEPolicy1]
+  cluster_id         = oci_containerengine_cluster.kubeOKECluster.id
+  compartment_id     = oci_identity_compartment.kubeCompartment.id
   kubernetes_version = var.kubernetes_version
-  name               = "FoggyKitchenOKENodePool"
+  name               = "kubeOKENodePool"
   node_shape         = var.Shape
   
   node_source_details {
@@ -49,7 +49,7 @@ resource "oci_containerengine_node_pool" "FoggyKitchenOKENodePool" {
 
     placement_configs {
       availability_domain = lookup(data.oci_identity_availability_domains.ADs.availability_domains[0], "name")
-      subnet_id           = oci_core_subnet.FoggyKitchenNodePoolSubnet.id
+      subnet_id           = oci_core_subnet.kubeNodePoolSubnet.id
     }  
   }
 
