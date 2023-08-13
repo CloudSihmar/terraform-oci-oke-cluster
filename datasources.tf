@@ -1,8 +1,8 @@
-data "oci_containerengine_cluster_option" "FoggyKitchenOKEClusterOption" {
+data "oci_containerengine_cluster_option" "OKEClusterOption" {
   cluster_option_id = "all"
 }
 
-data "oci_containerengine_node_pool_option" "FoggyKitchenOKEClusterNodePoolOption" {
+data "oci_containerengine_node_pool_option" "OKEClusterNodePoolOption" {
   node_pool_option_id = "all"
 }
 
