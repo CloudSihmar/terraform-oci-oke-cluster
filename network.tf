@@ -1,31 +1,31 @@
 resource "oci_core_vcn" "FoggyKitchenVCN" {
   cidr_block     = var.VCN-CIDR
-  compartment_id = oci_identity_compartment.FoggyKitchenCompartment.id
-  display_name   = "FoggyKitchenVCN"
+  compartment_id = oci_identity_compartment.kubeCompartment.id
+  display_name   = "kubeVCN"
 }
 
-resource "oci_core_internet_gateway" "FoggyKitchenInternetGateway" {
-  compartment_id = oci_identity_compartment.FoggyKitchenCompartment.id
-  display_name   = "FoggyKitchenInternetGateway"
-  vcn_id         = oci_core_vcn.FoggyKitchenVCN.id
+resource "oci_core_internet_gateway" "kubeInternetGateway" {
+  compartment_id = oci_identity_compartment.kubeCompartment.id
+  display_name   = "kubeInternetGateway"
+  vcn_id         = oci_core_vcn.kubeVCN.id
 }
 
-resource "oci_core_route_table" "FoggyKitchenRouteTableViaIGW" {
-  compartment_id = oci_identity_compartment.FoggyKitchenCompartment.id
-  vcn_id         = oci_core_vcn.FoggyKitchenVCN.id
-  display_name   = "FoggyKitchenRouteTableViaIGW"
+resource "oci_core_route_table" "kubeRouteTableViaIGW" {
+  compartment_id = oci_identity_compartment.kubeCompartment.id
+  vcn_id         = oci_core_vcn.kubeVCN.id
+  display_name   = "kubeRouteTableViaIGW"
 
   route_rules {
     destination       = "0.0.0.0/0"
     destination_type  = "CIDR_BLOCK"
-    network_entity_id =  oci_core_internet_gateway.FoggyKitchenInternetGateway.id
+    network_entity_id =  oci_core_internet_gateway.kubeInternetGateway.id
   }
 }
 
-resource "oci_core_security_list" "FoggyKitchenOKESecurityList" {
-    compartment_id = oci_identity_compartment.FoggyKitchenCompartment.id
-    display_name = "FoggyKitchenOKESecurityList"
-    vcn_id = oci_core_vcn.FoggyKitchenVCN.id
+resource "oci_core_security_list" "kubeOKESecurityList" {
+    compartment_id = oci_identity_compartment.kubeCompartment.id
+    display_name = "kubeOKESecurityList"
+    vcn_id = oci_core_vcn.kubeVCN.id
     
     egress_security_rules {
         protocol = "All"
@@ -39,23 +39,23 @@ resource "oci_core_security_list" "FoggyKitchenOKESecurityList" {
     }
 }
 
-resource "oci_core_subnet" "FoggyKitchenClusterSubnet" {
-  cidr_block          = var.FoggyKitchenClusterSubnet-CIDR
-  compartment_id      = oci_identity_compartment.FoggyKitchenCompartment.id
-  vcn_id              = oci_core_vcn.FoggyKitchenVCN.id
-  display_name        = "FoggyKitchenClusterSubnet"
+resource "oci_core_subnet" "kubeClusterSubnet" {
+  cidr_block          = var.kubeClusterSubnet-CIDR
+  compartment_id      = oci_identity_compartment.kubeCompartment.id
+  vcn_id              = oci_core_vcn.kubeVCN.id
+  display_name        = "kubeClusterSubnet"
 
-  security_list_ids = [oci_core_vcn.FoggyKitchenVCN.default_security_list_id, oci_core_security_list.FoggyKitchenOKESecurityList.id]
-  route_table_id    = oci_core_route_table.FoggyKitchenRouteTableViaIGW.id
+  security_list_ids = [oci_core_vcn.kubeVCN.default_security_list_id, oci_core_security_list.kubeOKESecurityList.id]
+  route_table_id    = oci_core_route_table.kubeRouteTableViaIGW.id
 }
 
-resource "oci_core_subnet" "FoggyKitchenNodePoolSubnet" {
-  cidr_block          = var.FoggyKitchenNodePoolSubnet-CIDR
-  compartment_id      = oci_identity_compartment.FoggyKitchenCompartment.id
-  vcn_id              = oci_core_vcn.FoggyKitchenVCN.id
-  display_name        = "FoggyKitchenNodePoolSubnet"
+resource "oci_core_subnet" "kubeNodePoolSubnet" {
+  cidr_block          = var.kubeNodePoolSubnet-CIDR
+  compartment_id      = oci_identity_compartment.kubeCompartment.id
+  vcn_id              = oci_core_vcn.kubeVCN.id
+  display_name        = "kubeNodePoolSubnet"
 
-  security_list_ids = [oci_core_vcn.FoggyKitchenVCN.default_security_list_id, oci_core_security_list.FoggyKitchenOKESecurityList.id]
-  route_table_id    = oci_core_route_table.FoggyKitchenRouteTableViaIGW.id
+  security_list_ids = [oci_core_vcn.kubeVCN.default_security_list_id, oci_core_security_list.kubeOKESecurityList.id]
+  route_table_id    = oci_core_route_table.kubeRouteTableViaIGW.id
 }
 
