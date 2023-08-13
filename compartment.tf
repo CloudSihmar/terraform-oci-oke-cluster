@@ -1,4 +1,4 @@
-resource "oci_identity_compartment" "FoggyKitchenCompartment" {
-  name = "FoggyKitchenCompartment"
-  description = "FoggyKitchen Compartment"
+resource "oci_identity_compartment" "kubeCompartment" {
+  name = "kube"
+  description = "Kube Compartment"
 }
