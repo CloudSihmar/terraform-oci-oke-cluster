@@ -1,4 +1,4 @@
-resource "oci_core_vcn" "FoggyKitchenVCN" {
+resource "oci_core_vcn" "kubeVCN" {
   cidr_block     = var.VCN-CIDR
   compartment_id = oci_identity_compartment.kubeCompartment.id
   display_name   = "kubeVCN"
