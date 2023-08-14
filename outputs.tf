@@ -1,4 +1,4 @@
-output "FoggyKitchenOKECluster" {
+output "OKECluster" {
   value = {
     id                 = oci_containerengine_cluster.kubeOKECluster.id
     kubernetes_version = oci_containerengine_cluster.kubeOKECluster.kubernetes_version
@@ -6,7 +6,7 @@ output "FoggyKitchenOKECluster" {
   }
 }
 
-output "FoggyKitchenOKENodePool" {
+output "OKENodePool" {
   value = {
     id                 = oci_containerengine_node_pool.kubeOKENodePool.id
     kubernetes_version = oci_containerengine_node_pool.kubeOKENodePool.kubernetes_version
@@ -15,10 +15,10 @@ output "FoggyKitchenOKENodePool" {
   }
 }
 
-output "FoggyKitchen_Cluster_Kubernetes_Versions" {
-  value = [data.oci_containerengine_cluster_option.kubeOKEClusterOption.kubernetes_versions]
+output "Cluster_Kubernetes_Versions" {
+  value = [data.oci_containerengine_cluster_option.OKEClusterOption.kubernetes_versions]
 }
 
-output "FoggyKitchen_Cluster_NodePool_Kubernetes_Version" {
-  value = [data.oci_containerengine_node_pool_option.kubeOKEClusterNodePoolOption.kubernetes_versions]
+output "Cluster_NodePool_Kubernetes_Version" {
+  value = [data.oci_containerengine_node_pool_option.OKEClusterNodePoolOption.kubernetes_versions]
 }
